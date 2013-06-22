@@ -108,6 +108,7 @@
 							</tbody>
 						</table>
 					</form>
+					<a href="template.html">Click here to see how to store member details</a>
 					<br/><br/>OR<br/><br/>
 					<form action="GetMembers" method="post">						
 						<table width="100%" border="0">							

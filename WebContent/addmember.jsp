@@ -69,7 +69,7 @@
 						out.println("</label><br/><br/><br/>");
 					}
 					%>
-					<label style="color: brown">Please write these values for no data available: 0 for numeric fields and NA for other fields.</label><br/>
+					<label style="color: brown">Before entering details, please see these guidelines: <a href="template.html">Click here.</a></label><br/><br/><br/>
 					<form action="MemberServ" method="post">
 						<table width="100%" border="0">
 							<tr>

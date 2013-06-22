@@ -23,17 +23,17 @@ import org.palhaveli.model.Member;
 import com.princexml.Prince;
 
 /**
- * Servlet implementation class PrintServ
+ * Servlet implementation class PrintTableServ
  */
-@WebServlet("/PrintServ")
-public class PrintServ extends HttpServlet {
+@WebServlet("/PrintTableServ")
+public class PrintTableServ extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final int DEFAULT_BUFFER_SIZE=4098;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public PrintServ() {
+    public PrintTableServ() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -50,7 +50,7 @@ public class PrintServ extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String idsToPrint=request.getParameter("idsToPrint");
+		String idsToPrint=request.getParameter("idsToPrintTable");
 		
 		if(idsToPrint==null || idsToPrint.length()==0){
 			response.sendRedirect("home.jsp");
@@ -60,33 +60,59 @@ public class PrintServ extends HttpServlet {
 		Connection connection=DbManager.getConnection();
 		MemberDbHelper memberDb=new MemberDbHelper(connection);
 		
-		List<Member> addresses = memberDb.getPrintDetails(idsToPrint);
+		List<Member> addresses = memberDb.getPrintTableDetails(idsToPrint);
 		
-		File htmlFile=new File("printfile.html");
+		//File htmlFile=new File(".\\palhaveli\\printtable.html");
+		File htmlFile=new File("./palhaveli/printtable.html");
 		
 		htmlFile.delete();
 		FileWriter fileWriter=new FileWriter(htmlFile);
-		fileWriter.append("<html><body><table width=\"100%\" border=\"1\">");
+		fileWriter.append("<html>");
+		/*fileWriter.append("<head>");
+		fileWriter.append("<style type=\"text/css\" title=\"currentStyle\">\n");				
+		fileWriter.append("@import \"css/jquery.dataTables_themeroller.css\";\n");			
+		fileWriter.append("@import \"css/demo_table.css\";\n");
+		fileWriter.append("@import \"css/TableTools.css\";\n");
+		fileWriter.append("</style>\n");
+		fileWriter.append("<script type=\"text/javascript\" charset=\"utf-8\" src=\"js/jquery.js\"></script>\n");
+		fileWriter.append("<script type=\"text/javascript\" charset=\"utf-8\" src=\"js/jquery.dataTables.js\"></script>\n");
+
+		fileWriter.append("<script type=\"text/javascript\" charset=\"utf-8\" src=\"js/ZeroClipboard.js\"></script>\n");
+		fileWriter.append("<script type=\"text/javascript\" charset=\"utf-8\" src=\"js/TableTools.min.js\"></script>\n");
+
+		fileWriter.append("<link href=\"css/google.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
+		fileWriter.append("<link href=\"css/style.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n");
+
+		fileWriter.append("<script type=\"text/javascript\">\n");
 		
-		int rowAddressCount=0;
+		fileWriter.append("$(document).ready(function() {\n");
+		fileWriter.append("var oTable = $('#data').dataTable({\"bFilter\": false});\n");			
+		fileWriter.append("} );\n");
+		fileWriter.append("</script></head>\n");*/
+		fileWriter.append("<body><table width=\"100%\" border=\"1\" id=\"data\" style=\"border: 1px solid black; border-collapse: collapse;\">");		
 		
-		for(Member address : addresses){
-			if(rowAddressCount == 0)
-				fileWriter.append("<tr>");			
-			
-			rowAddressCount++;
-			if(rowAddressCount==3)
-				rowAddressCount=0;
-			
-			if(rowAddressCount==1)
-				fileWriter.append("<td width=\"33%\" style=\"height: 3.4cm\">");
-			else
-				fileWriter.append("<td width=\"33%\" style=\"height: 3.4cm; padding-left: 0.4cm;\">");
-			fileWriter.append("<table>");
-			
-			fileWriter.append("<tr><td>");
+		fileWriter.append("<thead>\n");
+		fileWriter.append("<tr>\n");
+		fileWriter.append("    <th width=\"25%\">Name</th>\n");            
+		fileWriter.append("    <th width=\"20%\">Mobile</th>\n");
+		fileWriter.append("    <th width=\"55%\">Address</th>    \n");        						            
+		fileWriter.append("</tr>\n");
+		fileWriter.append("</thead>  \n");      
+		fileWriter.append("<tbody>\n");
+		
+		for(Member address : addresses){			
+			fileWriter.append("<tr>");
+						
+			fileWriter.append("<td width=\"25%\" style=\"padding-top: .5em; padding-bottom: .5em;\">");
 			fileWriter.append(address.getFirstName());
-			fileWriter.append("</td></tr>");
+			fileWriter.append("</td>");
+			
+			fileWriter.append("<td width=\"20%\" style=\"padding-top: .5em; padding-bottom: .5em; text-align: center;\">");
+			fileWriter.append(address.getMobile());
+			fileWriter.append("</td>");
+			
+			fileWriter.append("<td width=\"55%\" style=\"padding-top: .5em; padding-bottom: .5em;\">");
+			fileWriter.append("<table width=\"100%\">");
 			
 			fileWriter.append("<tr><td>");
 			fileWriter.append(address.getFlatApt()+address.getApartment());
@@ -97,37 +123,37 @@ public class PrintServ extends HttpServlet {
 			fileWriter.append("</td></tr>");
 			
 			fileWriter.append("<tr><td>");
-			fileWriter.append(address.getRoad()+" "+address.getRegion());
+			fileWriter.append(address.getRoad()+" "+address.getRegion()+" "+address.getCity()+address.getPincode());
 			fileWriter.append("</td></tr>");			
 			
-			fileWriter.append("<tr><td>");
+			/*fileWriter.append("<tr><td>");
 			fileWriter.append(address.getCity()+address.getPincode());
-			fileWriter.append("</td></tr>");
+			fileWriter.append("</td></tr>");*/
 			
 			fileWriter.append("</table>");
-			fileWriter.append("</td>");
+			fileWriter.append("</td>");	
 			
-			if(rowAddressCount == 0)
-				fileWriter.append("</tr>");									
+			fileWriter.append("</tr>");
 		}
 		
-		fileWriter.append("</table></body></html>");
+		fileWriter.append("</tbody></table></body></html>");
 		
 		fileWriter.close();
 		
 		//Prince prince=new Prince("C:\\Program Files\\Prince\\Engine\\bin\\prince.exe");
 		Prince prince=new Prince("/usr/bin/prince");
 		prince.setHTML(true);
-		//prince.addStyleSheet("C:\\pdfstyle.css");
-		prince.addStyleSheet("/home/raseshmori/pdfstyle.css");
+		//prince.addStyleSheet("C:\\pdftablestyle.css");
+		prince.addStyleSheet("/home/raseshmori/pdftablestyle.css");
 		
-		boolean isConvert=prince.convert("printfile.html","Print.pdf");
+		//boolean isConvert=prince.convert(".\\palhaveli\\printtable.html","PrintTable.pdf");
+		boolean isConvert=prince.convert("./palhaveli/printtable.html","PrintTable.pdf");
 		if(!isConvert){
 			response.sendRedirect("home.jsp?errorMsg=2");
 		}
 		
 		response.setContentType("application/pdf");
-		File file=new File("Print.pdf");
+		File file=new File("PrintTable.pdf");
 		
 		String contentType = getServletContext().getMimeType(file.getName());
 
@@ -172,4 +198,5 @@ public class PrintServ extends HttpServlet {
             }
         }
     }
+
 }

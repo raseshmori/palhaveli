@@ -318,6 +318,8 @@ public class MemberDbHelper {
 					sql.append(" SELECT * FROM vaishnav WHERE id NOT IN ( SELECT vaishnav_id FROM group_vaishnav )");
 				}
 				
+				sql.append(" ORDER by first_name");
+				
 				System.out.println("Member details sql: "+sql.toString());
 				
 				resultSet=statement.executeQuery(sql.toString());
@@ -358,7 +360,7 @@ public class MemberDbHelper {
 					memberDetails.add(member);
 				}
 			}else{
-				sql.append("SELECT * FROM vaishnav");
+				sql.append("SELECT * FROM vaishnav ORDER BY first_name");
 				
 				System.out.println("Member Details sql: "+sql.toString());
 				
@@ -414,8 +416,8 @@ public class MemberDbHelper {
 	public boolean markDuplicate(){
 		try{
 			Statement statement=connection.createStatement();
-			String sql="select distinct vo.id from vaishnav vo, vaishnav vi where vo.id != vi.id and vo.flat_apt=vi.flat_apt and vo.last_name=vi.last_name and vo.apartment=vi.apartment and vo.id not in ("+
-						"select distinct vo.id from vaishnav vo, vaishnav vi where vo.id != vi.id and vo.flat_apt=vi.flat_apt and vo.last_name=vi.last_name and vo.apartment=vi.apartment group by vo.flat_apt, vo.last_name, vo.apartment);";
+			String sql="select distinct vo.id from vaishnav vo, vaishnav vi where vo.id != vi.id and LOWER(vo.flat_apt)=LOWER(vi.flat_apt) and LOWER(vo.last_name)=LOWER(vi.last_name) and LOWER(vo.apartment)=LOWER(vi.apartment) and LOWER(vo.region)=LOWER(vi.region) and vo.id not in ("+
+						"select distinct vo.id from vaishnav vo, vaishnav vi where vo.id != vi.id and LOWER(vo.flat_apt)=LOWER(vi.flat_apt) and LOWER(vo.last_name)=LOWER(vi.last_name) and LOWER(vo.apartment)=LOWER(vi.apartment) and LOWER(vo.region)=LOWER(vi.region) group by vo.flat_apt, vo.last_name, vo.apartment);";
 			
 			System.out.println("Executing for mark duplicate: "+sql);
 			
@@ -490,6 +492,66 @@ public class MemberDbHelper {
 				member.setRegion(region);
 				member.setCity(city);
 				member.setPincode(pincode);
+				
+				addresses.add(member);
+			}
+			
+			return addresses;
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public List<Member> getPrintTableDetails(String idsToPrint){
+		List<Member> addresses=new ArrayList<Member>();
+		
+		try{
+			Statement statement=connection.createStatement();
+			String sql="SELECT first_name, middle_name, last_name, flat_apt, apartment, landmark, road, region, city, pincode, mobile FROM vaishnav WHERE id IN ("+idsToPrint+");";
+			
+			ResultSet resultSet=statement.executeQuery(sql);
+			
+			StringBuffer buff=new StringBuffer();
+			
+			while(resultSet.next()){
+				buff.replace(0, buff.length(), "");
+				String firstName=resultSet.getString("first_name");
+				String middleName=resultSet.getString("middle_name");
+				String lastName=resultSet.getString("last_name");
+				
+				String name=(firstName==null || firstName.equals("") || firstName.equals("NA"))?" ":firstName+" ";
+				name+=(middleName==null || middleName.equals("") || middleName.equals("NA"))?" ":middleName+" ";
+				name+=(lastName==null || lastName.equals("") || lastName.equals("NA"))?"":lastName;
+				
+				String flatNo=resultSet.getString("flat_apt");
+				String apartment=resultSet.getString("apartment");
+				String landmark=resultSet.getString("landmark");
+				String road=resultSet.getString("road");
+				String region=resultSet.getString("region");
+				String city=resultSet.getString("city");
+				String pincode=resultSet.getString("pincode");
+				String mobile=resultSet.getString("mobile");
+				
+				flatNo=(flatNo==null || flatNo.equals("") || flatNo.equals("NA"))?"":flatNo+",";
+				apartment=(apartment==null || apartment.equals("") || apartment.equals("NA"))?"":apartment;
+				landmark=(landmark==null || landmark.equals("") || landmark.equals("NA"))?"":landmark;
+				road=(road==null || road.equals("") || road.equals("NA"))?"":road+",";
+				region=(region==null || region.equals("") || region.equals("NA"))?"":region;
+				city=(city==null || city.equals("") || city.equals("NA"))?"":city+"-";
+				pincode=(pincode==null || pincode.equals("") || pincode.equals("0"))?"":pincode;
+				mobile=(mobile==null || mobile.equals("0"))?"Not available":mobile;
+				
+				Member member=new Member();
+				member.setFirstName(name);
+				member.setFlatApt(flatNo);
+				member.setApartment(apartment);
+				member.setLandmark(landmark);
+				member.setRoad(road);
+				member.setRegion(region);
+				member.setCity(city);
+				member.setPincode(pincode);
+				member.setMobile(mobile);
 				
 				addresses.add(member);
 			}

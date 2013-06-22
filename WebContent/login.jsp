@@ -12,7 +12,7 @@
 <body>
 <%
 	if(session.getAttribute("user") != null){
-		response.sendRedirect("home.jsp");
+		response.sendRedirect("HomeServ");
 	}
 %>
 <div id="wrapper">

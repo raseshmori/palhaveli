@@ -158,28 +158,28 @@ public class MemberServ extends HttpServlet {
 			
 			Member member=new Member();
 			member.setBramsambandh(brahmsambandh);
-			member.setCaste(caste);
-			member.setCity(city);
-			member.setCountry(country);
+			member.setCaste(caste.equalsIgnoreCase("NA")?"NA":caste);
+			member.setCity(city.equalsIgnoreCase("NA")?"NA":city);
+			member.setCountry(country.equalsIgnoreCase("NA")?"NA":country);
 			member.setDuplicate(false);
-			member.setEmail(email);
+			member.setEmail(email.equalsIgnoreCase("NA")?"NA":email);
 			member.setFamilyMembers(members);
-			member.setFirstName(firstName);
-			member.setFlatApt(flatapt);
+			member.setFirstName(firstName.equalsIgnoreCase("NA")?"NA":firstName);
+			member.setFlatApt(flatapt.equalsIgnoreCase("NA")?"NA":flatapt.toUpperCase());
 			member.setGroupIds(groupIds);
-			member.setHome(home);
-			member.setHomeTown(hometown);
-			member.setLandmark(landmark);
-			member.setLastName(lastName);
+			member.setHome(home.equalsIgnoreCase("NA")?"NA":home);
+			member.setHomeTown(hometown.equalsIgnoreCase("NA")?"NA":hometown);
+			member.setLandmark(landmark.equalsIgnoreCase("NA")?"NA":landmark);
+			member.setLastName(lastName.equalsIgnoreCase("NA")?"NA":lastName);
 			member.setMobile(mobile);
 			member.setPincode(pincode);
-			member.setProfession(profession);
-			member.setRegion(region);
-			member.setRoad(road);
-			member.setState(state);
+			member.setProfession(profession.equalsIgnoreCase("NA")?"NA":profession);
+			member.setRegion(region.equalsIgnoreCase("NA")?"NA":region);
+			member.setRoad(road.equalsIgnoreCase("NA")?"NA":road);
+			member.setState(state.equalsIgnoreCase("NA")?"NA":state);
 			member.setThakorji(thakorji);
-			member.setApartment(apartment);
-			member.setMiddleName(middleName);
+			member.setApartment(apartment.equalsIgnoreCase("NA")?"NA":apartment);
+			member.setMiddleName(middleName.equalsIgnoreCase("NA")?"NA":middleName);
 			
 			MemberDbHelper memberDb=new MemberDbHelper(connection);
 			

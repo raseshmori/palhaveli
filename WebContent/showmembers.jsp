@@ -101,7 +101,11 @@
 
 	$(document).ready(function() {
 		/* Initialise the DataTable */
-		var oTable = $('#data').dataTable();
+		var oTable = $('#data').dataTable({
+		       "oLanguage": {
+		           "sSearch": ""
+		         }
+		       } );
 		
 		/* Add a select menu for each TH element in the table footer */
 		$("tfoot th").each( function ( i ) {
@@ -116,6 +120,40 @@
 		fnShowHide(10);
 		fnShowHide(11);
 	} );
+	
+	function printtable(){
+		
+		var oTable=$("#data").dataTable();
+		var oSettings = oTable.fnSettings();
+	    oSettings._iDisplayLength = -1;
+	    oTable.fnDraw();
+	    
+		var selector = $("#data tr");
+		
+		var count=0;
+		var idsToPrint="";
+		
+		selector.each(function (index, element) {
+		    count++;
+		    var id=$(this).find("td:first").html();
+		    
+		    if(!isNaN(id))
+		    	idsToPrint+=id+",";
+		    
+		});
+		
+		if(idsToPrint != ""){
+			idsToPrint=idsToPrint.substring(0, idsToPrint.length - 1);
+			
+			if($("#idsToPrintTable")){
+				$("#idsToPrintTable").remove();
+			}
+			
+			$("#printtable").append('<input type="hidden" id="idsToPrintTable" name="idsToPrintTable" value="'+idsToPrint+'">');						
+			//alert(idsToPrint);
+			$("#printtable").submit();
+		}
+	}
 	
 	function printaddress(){
 		
@@ -145,9 +183,7 @@
 				$("#idsToPrint").remove();
 			}
 			
-			$("#printform").append('<input type="hidden" id="idsToPrint" name="idsToPrint" value="'+idsToPrint+'">');			
-			
-			alert($('#idsToPrint').val());
+			$("#printform").append('<input type="hidden" id="idsToPrint" name="idsToPrint" value="'+idsToPrint+'">');						
 			
 			$("#printform").submit();
 		}
@@ -211,13 +247,15 @@
 					</table>
 				</div><br/>
 				<div>
-					<table width="100%">
-						<tr>
-							<td style="text-align: right"><input type="submit" onclick="printaddress()" value="Sticker Print" /></td>
+					<table width="100%" border="0">					
+						<tr>							
+							<td style="text-align: right"><input type="submit" onclick="printtable()" value="Table Print" /> <input type="submit" onclick="printaddress()" value="Sticker Print" /></td>
 						</tr>
 					</table>					
 				</div>
 				<!--div class="entry"-->
+					<form id="printtable" action="PrintTableServ" method="post">						
+					</form>
 					<form id="printform" action="PrintServ" method="post">
 						<table id="data" border="1" style="table-layout: fixed">
 							<thead>
