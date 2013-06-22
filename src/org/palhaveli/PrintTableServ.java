@@ -103,7 +103,7 @@ public class PrintTableServ extends HttpServlet {
 		for(Member address : addresses){			
 			fileWriter.append("<tr>");
 						
-			fileWriter.append("<td width=\"25%\" style=\"padding-top: .5em; padding-bottom: .5em;\">");
+			fileWriter.append("<td width=\"25%\" style=\"padding-top: .5em; padding-bottom: .5em; padding-left: 0.4cm;\">");
 			fileWriter.append(address.getFirstName());
 			fileWriter.append("</td>");
 			
@@ -111,7 +111,7 @@ public class PrintTableServ extends HttpServlet {
 			fileWriter.append(address.getMobile());
 			fileWriter.append("</td>");
 			
-			fileWriter.append("<td width=\"55%\" style=\"padding-top: .5em; padding-bottom: .5em;\">");
+			fileWriter.append("<td width=\"55%\" style=\"padding-top: .5em; padding-bottom: .5em; padding-left: 0.4cm;\">");
 			fileWriter.append("<table width=\"100%\">");
 			
 			fileWriter.append("<tr><td>");

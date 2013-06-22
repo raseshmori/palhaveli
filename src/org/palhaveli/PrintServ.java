@@ -66,7 +66,7 @@ public class PrintServ extends HttpServlet {
 		
 		htmlFile.delete();
 		FileWriter fileWriter=new FileWriter(htmlFile);
-		fileWriter.append("<html><body><table width=\"100%\" border=\"1\">");
+		fileWriter.append("<html><body><table width=\"100%\" border=\"0\">");
 		
 		int rowAddressCount=0;
 		
@@ -79,30 +79,32 @@ public class PrintServ extends HttpServlet {
 				rowAddressCount=0;
 			
 			if(rowAddressCount==1)
-				fileWriter.append("<td width=\"33%\" style=\"height: 3.4cm\">");
+				fileWriter.append("<td width=\"33%\" style=\"height: 3.5cm\">");
+			else if(rowAddressCount==2)
+				fileWriter.append("<td width=\"33%\" style=\"height: 3.5cm; padding-left: 0.7cm;\">");
 			else
-				fileWriter.append("<td width=\"33%\" style=\"height: 3.4cm; padding-left: 0.4cm;\">");
+				fileWriter.append("<td width=\"33%\" style=\"height: 3.5cm; padding-left: 1.0cm;\">");
 			fileWriter.append("<table>");
 			
+			fileWriter.append("<tr><td><b>");
+			fileWriter.append(address.getFirstName().toUpperCase());
+			fileWriter.append("</b></td></tr>");
+			
 			fileWriter.append("<tr><td>");
-			fileWriter.append(address.getFirstName());
+			fileWriter.append(address.getFlatApt().toUpperCase()+address.getApartment().toUpperCase());
 			fileWriter.append("</td></tr>");
 			
 			fileWriter.append("<tr><td>");
-			fileWriter.append(address.getFlatApt()+address.getApartment());
+			fileWriter.append(address.getLandmark().toUpperCase());
 			fileWriter.append("</td></tr>");
 			
 			fileWriter.append("<tr><td>");
-			fileWriter.append(address.getLandmark());
-			fileWriter.append("</td></tr>");
-			
-			fileWriter.append("<tr><td>");
-			fileWriter.append(address.getRoad()+" "+address.getRegion());
+			fileWriter.append(address.getRoad().toUpperCase()+" "+address.getRegion().toUpperCase());
 			fileWriter.append("</td></tr>");			
 			
-			fileWriter.append("<tr><td>");
-			fileWriter.append(address.getCity()+address.getPincode());
-			fileWriter.append("</td></tr>");
+			fileWriter.append("<tr><td><b>");
+			fileWriter.append(address.getCity().toUpperCase()+address.getPincode());
+			fileWriter.append("</b></td></tr>");
 			
 			fileWriter.append("</table>");
 			fileWriter.append("</td>");
